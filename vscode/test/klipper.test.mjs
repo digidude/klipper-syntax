@@ -166,3 +166,13 @@ test('jinja inside a quoted gcode parameter', async () => {
   has(t, 'int', 'support.function.filter');
   has(t, ' done', 'string.quoted.double');
 });
+
+test('jinja strings keep escaped quotes inside the string', async () => {
+  const t = await tokenize('[gcode_macro M]\ngcode:\n  {% set x = "a \\" b" ~ \'c \\\' d\' %}\n  G28\n');
+  has(t, '\\"', 'constant.character.escape');
+  has(t, ' b', 'string.quoted.double');
+  has(t, '\\\'', 'constant.character.escape');
+  has(t, ' d', 'string.quoted.single');
+  // the next line is not swallowed by an unterminated string
+  has(t, 'G28', 'keyword.control.gcode');
+});
