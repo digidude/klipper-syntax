@@ -1,0 +1,17 @@
+id = "klipper"
+name = "Klipper"
+version = "0.1.0"
+schema_version = 1
+authors = ["Dan Klaussen"]
+description = "Syntax highlighting for Klipper printer.cfg, including the G-code and Jinja2 inside macros. Pairs with Klipper Language Server for hover docs and go-to-definition."
+repository = "https://github.com/digidude/klipper-syntax"
+
+[grammars.klipper]
+# The grammar lives in this same repository (grammar/). Zed fetches and builds
+# it at `rev`, so after a grammar change: commit, push, then bump `rev` to the
+# pushed commit (scripts/check-zed-pin.sh checks it). While iterating locally,
+# temporarily point `repository` at "file:///path/to/klipper-syntax" and never
+# commit that.
+repository = "https://github.com/digidude/klipper-syntax"
+rev = "REPLACE_WITH_PUSHED_COMMIT"
+path = "grammar"
