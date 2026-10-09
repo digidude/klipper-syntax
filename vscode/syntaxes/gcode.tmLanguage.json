@@ -1,0 +1,110 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "G-code",
+  "scopeName": "source.gcode",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#line-number"
+    },
+    {
+      "include": "#command"
+    },
+    {
+      "include": "#parameters"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "match": ";.*$",
+          "name": "comment.line.semicolon.gcode"
+        },
+        {
+          "match": "\\([^)\\n]*\\)",
+          "name": "comment.block.parenthesis.gcode"
+        }
+      ]
+    },
+    "line-number": {
+      "patterns": [
+        {
+          "match": "^\\s*(N\\d+)\\b",
+          "captures": {
+            "1": {
+              "name": "constant.numeric.line-number.gcode"
+            }
+          }
+        },
+        {
+          "match": "(\\*)(\\d+)\\s*(?=;|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.checksum.gcode"
+            },
+            "2": {
+              "name": "constant.numeric.checksum.gcode"
+            }
+          }
+        }
+      ]
+    },
+    "command": {
+      "patterns": [
+        {
+          "match": "(?:^\\s*(?:N\\d+\\s+)?)([GMTgmt]\\d+(?:\\.\\d+)?)(?=[\\s;(*]|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.gcode"
+            }
+          }
+        },
+        {
+          "match": "(?:^\\s*(?:N\\d+\\s+)?)([A-Za-z_][A-Za-z0-9_]*)(?=[\\s;(*]|$)",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.gcode"
+            }
+          }
+        }
+      ]
+    },
+    "parameters": {
+      "patterns": [
+        {
+          "match": "(?<![\\w])([A-Za-z_][A-Za-z0-9_]*)(=)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.gcode"
+            },
+            "2": {
+              "name": "punctuation.separator.parameter.gcode"
+            }
+          }
+        },
+        {
+          "match": "(?<![\\w])([A-Za-z])(?=[-+.\\d])((?:[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?)?)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.gcode"
+            },
+            "2": {
+              "name": "constant.numeric.gcode"
+            }
+          }
+        },
+        {
+          "match": "\"[^\"\\n]*\"",
+          "name": "string.quoted.double.gcode"
+        },
+        {
+          "match": "(?<![\\w.])[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?",
+          "name": "constant.numeric.gcode"
+        }
+      ]
+    }
+  }
+}

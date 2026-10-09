@@ -1,0 +1,525 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Klipper",
+  "scopeName": "source.klipper",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#section"
+    },
+    {
+      "include": "#gcode-option"
+    },
+    {
+      "include": "#rename-existing"
+    },
+    {
+      "include": "#option"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "match": "^\\s*#\\*#.*$",
+          "name": "comment.line.number-sign.save-config.klipper"
+        },
+        {
+          "match": "^\\s*[#;].*$",
+          "name": "comment.line.number-sign.klipper"
+        }
+      ]
+    },
+    "trailing-comment": {
+      "match": "(?<=\\s)[#;].*$",
+      "name": "comment.line.number-sign.klipper"
+    },
+    "section": {
+      "patterns": [
+        {
+          "match": "^(\\[)\\s*(gcode_macro|delayed_gcode)\\s+([^\\]]*?)\\s*(\\])(?:\\s+([#;].*))?",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.section.begin.klipper"
+            },
+            "2": {
+              "name": "entity.name.type.section.klipper"
+            },
+            "3": {
+              "name": "entity.name.function.macro.klipper"
+            },
+            "4": {
+              "name": "punctuation.definition.section.end.klipper"
+            },
+            "5": {
+              "name": "comment.line.number-sign.klipper"
+            }
+          },
+          "name": "meta.section.klipper"
+        },
+        {
+          "match": "^(\\[)\\s*([^\\s\\]]+)(?:\\s+([^\\]]*?))?\\s*(\\])(?:\\s+([#;].*))?",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.section.begin.klipper"
+            },
+            "2": {
+              "name": "entity.name.type.section.klipper"
+            },
+            "3": {
+              "name": "entity.name.section.klipper"
+            },
+            "4": {
+              "name": "punctuation.definition.section.end.klipper"
+            },
+            "5": {
+              "name": "comment.line.number-sign.klipper"
+            }
+          },
+          "name": "meta.section.klipper"
+        }
+      ]
+    },
+    "rename-existing": {
+      "match": "^(rename_existing)\\s*([:=])\\s*([A-Za-z_][A-Za-z0-9_]*)",
+      "captures": {
+        "1": {
+          "name": "support.type.property-name.klipper"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.klipper"
+        },
+        "3": {
+          "name": "entity.name.function.gcode.klipper"
+        }
+      },
+      "name": "meta.option.klipper"
+    },
+    "option": {
+      "begin": "^([A-Za-z0-9_.\\-]+)\\s*([:=])",
+      "beginCaptures": {
+        "1": {
+          "patterns": [
+            {
+              "match": "^variable_.*$",
+              "name": "variable.other.property.template.klipper"
+            },
+            {
+              "match": ".+",
+              "name": "support.type.property-name.klipper"
+            }
+          ]
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.klipper"
+        }
+      },
+      "end": "^(?=[^\\s#;])",
+      "name": "meta.option.klipper",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#value"
+        }
+      ]
+    },
+    "value": {
+      "patterns": [
+        {
+          "include": "#trailing-comment"
+        },
+        {
+          "match": "\"[^\"\\n]*\"",
+          "name": "string.quoted.double.klipper"
+        },
+        {
+          "match": "'[^'\\n]*'",
+          "name": "string.quoted.single.klipper"
+        },
+        {
+          "match": "(?<![\\w.:/-])(?:true|false|True|False)(?![\\w.:/-])",
+          "name": "constant.language.boolean.klipper"
+        },
+        {
+          "match": "(?<![\\w.:/-])(?:none|None)(?![\\w.:/-])",
+          "name": "constant.language.none.klipper"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#pin"
+        },
+        {
+          "match": "(?<![\\w])(?:~|\\.\\.?)?/[^\\s,\"'\\[\\]{}()]*",
+          "name": "string.other.path.klipper"
+        },
+        {
+          "match": "[,]",
+          "name": "punctuation.separator.comma.klipper"
+        },
+        {
+          "match": "[^\\s,\"'\\[\\]{}()#;][^\\s,\\[\\]{}()]*",
+          "name": "string.unquoted.klipper"
+        }
+      ]
+    },
+    "pin": {
+      "patterns": [
+        {
+          "match": "(?<![\\w.:/-])([\\^!~]*)(?:([A-Za-z0-9_.]+)(:))?(P[A-Z]\\d{1,2}|P\\d\\.\\d{1,2}|gpio\\d{1,3}(?:_\\d{1,3})?|(?:analog|ar)\\d{1,3}|EXP\\d_\\d{1,2}|PIN_\\d{1,2})(?=[\\s,)\\]}#;]|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.pin-modifier.klipper"
+            }
+          },
+          "name": "constant.other.pin.klipper"
+        },
+        {
+          "match": "(?<![\\w.:/-])([\\^!~]*)[A-Za-z0-9_.]+:[A-Za-z0-9_]*virtual_endstop(?=[\\s,)\\]}#;]|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.pin-modifier.klipper"
+            }
+          },
+          "name": "constant.other.pin.klipper"
+        }
+      ]
+    },
+    "number": {
+      "match": "(?<![\\w./-])[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?(?![\\w/-]|\\.\\w|:[A-Za-z_])",
+      "name": "constant.numeric.klipper"
+    },
+    "gcode-option": {
+      "begin": "^((?:[A-Za-z0-9_]*_)?gcode)\\s*([:=])",
+      "beginCaptures": {
+        "1": {
+          "name": "support.type.property-name.klipper"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.klipper"
+        }
+      },
+      "end": "^(?=[^\\s#;])",
+      "name": "meta.template.klipper",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#jinja"
+        },
+        {
+          "include": "#gcode"
+        }
+      ]
+    },
+    "gcode": {
+      "patterns": [
+        {
+          "match": ";.*$",
+          "name": "comment.line.semicolon.gcode.klipper"
+        },
+        {
+          "match": "(?<=\\s)#.*$",
+          "name": "comment.line.number-sign.klipper"
+        },
+        {
+          "match": "(?:^\\s+|\\G\\s*|(?<=%\\})\\s*)([GMTgmt]\\d+(?:\\.\\d+)?)(?=[\\s;{]|$)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.gcode.klipper"
+            }
+          }
+        },
+        {
+          "match": "(?:^\\s+|\\G\\s*|(?<=%\\})\\s*)([A-Za-z_][A-Za-z0-9_]*)(?=[\\s;{]|$)",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.gcode.klipper"
+            }
+          }
+        },
+        {
+          "match": "(?<![\\w])([A-Za-z_][A-Za-z0-9_]*)(=)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.gcode.klipper"
+            },
+            "2": {
+              "name": "punctuation.separator.parameter.klipper"
+            }
+          }
+        },
+        {
+          "match": "(?<![\\w])([XYZEFSPTIJRDHQxyzefsptijrdhq])(?=[-+.\\d{])((?:[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?)?)",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.gcode.klipper"
+            },
+            "2": {
+              "name": "constant.numeric.klipper"
+            }
+          }
+        },
+        {
+          "begin": "\"",
+          "end": "\"|(?=$)",
+          "name": "string.quoted.double.klipper",
+          "patterns": [
+            {
+              "include": "#jinja"
+            }
+          ]
+        },
+        {
+          "match": "(?<![\\w.])(?:true|false|True|False)(?![\\w.])",
+          "name": "constant.language.boolean.klipper"
+        },
+        {
+          "include": "#number"
+        }
+      ]
+    },
+    "jinja": {
+      "patterns": [
+        {
+          "begin": "\\{#",
+          "end": "#\\}",
+          "name": "comment.block.jinja.klipper",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.jinja.klipper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.jinja.klipper"
+            }
+          }
+        },
+        {
+          "begin": "\\{%[-+]?",
+          "end": "[-+]?%\\}",
+          "name": "meta.statement.jinja.klipper",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.tag.begin.jinja.klipper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.tag.end.jinja.klipper"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#jinja-expr"
+            }
+          ]
+        },
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "name": "meta.expression.jinja.klipper",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.expression.begin.jinja.klipper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.expression.end.jinja.klipper"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#jinja-expr"
+            }
+          ]
+        }
+      ]
+    },
+    "jinja-expr": {
+      "patterns": [
+        {
+          "match": "\\b(set)\\b(?:\\s+([A-Za-z_][A-Za-z0-9_]*))?",
+          "captures": {
+            "1": {
+              "name": "keyword.control.jinja.klipper"
+            },
+            "2": {
+              "name": "variable.other.readwrite.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "\\b(macro)\\b(?:\\s+([A-Za-z_][A-Za-z0-9_]*))?",
+          "captures": {
+            "1": {
+              "name": "keyword.control.jinja.klipper"
+            },
+            "2": {
+              "name": "entity.name.function.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "\\b(if|elif|else|endif|for|endfor|recursive|endset|endmacro|call|endcall|filter|endfilter|do|with|endwith|raw|endraw|include|import|from|as|block|endblock|extends|continue|break)\\b",
+          "name": "keyword.control.jinja.klipper"
+        },
+        {
+          "match": "\\b(is)\\b(?:\\s+(not)\\b)?(?:\\s+(boolean|callable|defined|divisibleby|eq|equalto|escaped|even|false|float|ge|greaterthan|gt|in|integer|iterable|le|lessthan|lower|lt|mapping|ne|none|number|odd|sameas|sequence|string|true|undefined|upper)\\b)?",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.word.jinja.klipper"
+            },
+            "2": {
+              "name": "keyword.operator.word.jinja.klipper"
+            },
+            "3": {
+              "name": "support.function.test.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "\\b(in|not|and|or)\\b",
+          "name": "keyword.operator.word.jinja.klipper"
+        },
+        {
+          "match": "\\b(true|false|none|True|False|None)\\b",
+          "name": "constant.language.jinja.klipper"
+        },
+        {
+          "match": "(\\|)\\s*(abs|attr|batch|capitalize|center|count|d|default|dictsort|e|escape|filesizeformat|first|float|forceescape|format|groupby|indent|int|join|last|length|list|lower|map|max|min|pprint|random|reject|rejectattr|replace|reverse|round|safe|select|selectattr|slice|sort|string|striptags|sum|title|tojson|trim|truncate|unique|upper|urlencode|urlize|wordcount|wordwrap|xmlattr)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.jinja.klipper"
+            },
+            "2": {
+              "name": "support.function.filter.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "(\\|)\\s*([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.jinja.klipper"
+            },
+            "2": {
+              "name": "meta.filter.unknown.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "\\b(params|rawparams|printer)\\b(?!\\s*=[^=])",
+          "name": "variable.language.klipper"
+        },
+        {
+          "match": "\\b(action_emergency_stop|action_respond_info|action_raise_error|action_call_remote_method|range|dict|lipsum|cycler|joiner|namespace)(?=\\s*\\()",
+          "name": "support.function.builtin.jinja.klipper"
+        },
+        {
+          "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)(?=\\s*\\()",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.jinja.klipper"
+            },
+            "2": {
+              "name": "entity.name.function.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.accessor.jinja.klipper"
+            },
+            "2": {
+              "name": "variable.other.property.jinja.klipper"
+            }
+          }
+        },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(?=\\s*\\()",
+          "name": "entity.name.function.jinja.klipper"
+        },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)(?=\\s*=(?!=))",
+          "name": "variable.parameter.jinja.klipper"
+        },
+        {
+          "match": "'(?:[^'\\\\\\n]|\\\\.)*'(?=\\s*:)|\"(?:[^\"\\\\\\n]|\\\\.)*\"(?=\\s*:)",
+          "name": "support.type.property-name.jinja.klipper"
+        },
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.jinja.klipper",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.jinja.klipper"
+            }
+          ]
+        },
+        {
+          "begin": "'",
+          "end": "'",
+          "name": "string.quoted.single.jinja.klipper",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.jinja.klipper"
+            }
+          ]
+        },
+        {
+          "match": "(?<![\\w.])(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?\\b",
+          "name": "constant.numeric.jinja.klipper"
+        },
+        {
+          "match": "==|!=|<=|>=|\\*\\*|//|[<>+\\-*/%~]",
+          "name": "keyword.operator.jinja.klipper"
+        },
+        {
+          "match": "=",
+          "name": "keyword.operator.assignment.jinja.klipper"
+        },
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.braces.begin.jinja.klipper"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.braces.end.jinja.klipper"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#jinja-expr"
+            }
+          ]
+        },
+        {
+          "match": "[()\\[\\]]",
+          "name": "punctuation.section.brackets.jinja.klipper"
+        },
+        {
+          "match": "[,:]",
+          "name": "punctuation.separator.jinja.klipper"
+        }
+      ]
+    }
+  }
+}

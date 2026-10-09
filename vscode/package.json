@@ -1,0 +1,94 @@
+{
+  "name": "klipper-syntax",
+  "displayName": "Klipper Syntax",
+  "description": "Syntax highlighting for Klipper printer.cfg, the G-code and Jinja2 in macros, and sliced .gcode files. Pairs with Klipper Language Server for hover docs and go-to-definition.",
+  "version": "0.1.0",
+  "publisher": "digidude",
+  "author": {
+    "name": "Dan Klaussen"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digidude/klipper-syntax",
+    "directory": "vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/digidude/klipper-syntax/issues"
+  },
+  "homepage": "https://github.com/digidude/klipper-syntax#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "klipper",
+    "klipper3d",
+    "3d printing",
+    "printer.cfg",
+    "gcode",
+    "jinja",
+    "jinja2",
+    "syntax"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "klipper",
+        "aliases": [
+          "Klipper",
+          "klipper"
+        ],
+        "extensions": [
+          ".cfg"
+        ],
+        "filenames": [
+          "printer.cfg",
+          "mainsail.cfg",
+          "fluidd.cfg"
+        ],
+        "filenamePatterns": [
+          "**/printer_data/config/**/*.cfg",
+          "**/klipper_config/**/*.cfg"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "gcode",
+        "aliases": [
+          "G-code",
+          "gcode"
+        ],
+        "extensions": [
+          ".gcode",
+          ".gco"
+        ],
+        "configuration": "./gcode-language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "klipper",
+        "scopeName": "source.klipper",
+        "path": "./syntaxes/klipper.tmLanguage.json"
+      },
+      {
+        "language": "gcode",
+        "scopeName": "source.gcode",
+        "path": "./syntaxes/gcode.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node scripts/build-grammars.mjs",
+    "test": "node scripts/build-grammars.mjs && node --test test/*.test.mjs",
+    "package": "npm run build && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "3.2.1",
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.1.0"
+  }
+}
