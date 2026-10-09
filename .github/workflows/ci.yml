@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  grammar:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: grammar
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: grammar/package-lock.json
+      - run: npm ci
+      - name: Generated parser is committed and current
+        run: |
+          npx tree-sitter generate
+          git diff --exit-code -- src
+      - run: npx tree-sitter test
+      - name: Highlight queries compile against the grammar
+        run: |
+          for q in ../zed/languages/klipper/*.scm; do
+            npx tree-sitter query "$q" test/smoke.cfg > /dev/null
+          done
+
+  vscode:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: vscode/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - name: Generated grammars are committed and current
+        run: git diff --exit-code -- syntaxes
+      - run: npx vsce package --no-dependencies
+
+  zed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin is well-formed
+        run: scripts/check-zed-pin.sh --format
+        continue-on-error: true # placeholder until the first push; remove then
