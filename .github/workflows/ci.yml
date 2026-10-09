@@ -54,4 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Pin is well-formed
         run: scripts/check-zed-pin.sh --format
-        continue-on-error: true # placeholder until the first push; remove then
+      - name: Pinned grammar matches grammar/src
+        run: |
+          git fetch --unshallow || true
+          scripts/check-zed-pin.sh

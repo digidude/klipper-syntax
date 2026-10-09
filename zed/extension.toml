@@ -13,5 +13,5 @@ repository = "https://github.com/digidude/klipper-syntax"
 # temporarily point `repository` at "file:///path/to/klipper-syntax" and never
 # commit that.
 repository = "https://github.com/digidude/klipper-syntax"
-rev = "REPLACE_WITH_PUSHED_COMMIT"
+rev = "55c3761fb24515dfe23e8167cc21aa8237ec7840"
 path = "grammar"
