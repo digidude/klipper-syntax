@@ -7,7 +7,7 @@
       "scope": "source.klipper",
       "path": ".",
       "file-types": ["cfg"],
-      "highlights": "../languages/klipper/highlights.scm"
+      "highlights": "../zed/languages/klipper/highlights.scm"
     }
   ],
   "metadata": {

@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.vsix
+*.wasm
+/zed/grammars/
+.vscode-test/
